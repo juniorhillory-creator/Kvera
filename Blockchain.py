@@ -10,7 +10,7 @@ class Block:
         
 #calculate the hash
     def cal_hash(self):
-        content=f"{self.index}|{self.data}"
+        content=f"{self.index}|{self.data}|{self.prev_hash}"
         return hashlib.sha256(content.encode()).hexdigest()
 
 def short(long_hash):
@@ -45,8 +45,11 @@ class Blockchain:
     def is_chain_valid(self):
         for i in range(len(self.chain)):
             block= self.chain[i]
+            prev_block=self.chain[i-1]
 
             if block.hash != block.cal_hash():
+                return False
+            if block.prev_hash != prev_block.hash:
                 return False
 
         return True
@@ -59,16 +62,20 @@ Kvera.add_block("Kush pays Roby 5")
 Kvera.add_block("Kush pays Sathoshi 5")
 Kvera.add_block("Satoshi pays kush 5")
 
-#edit
-#block4=Kvera.chain[4]
-#block4.data="Satoshi pays Kush 50"
-#block4.hash=block4.cal_hash()
+#edit block3
+block3=Kvera.chain[3]
+block3.data="Satoshi pays Kush 50"
+block3.hash=block3.cal_hash()
 
-#print
+#edit block 4 with block3 prev hash
+block4=Kvera.chain[4]
+block4.prev_hash=block3.hash
+
+#print blocks
 Kvera.print_chain()
 
 #validate is it true
-#print("is chain valid: ",Kvera.is_chain_valid())
+print("is chain valid: ",Kvera.is_chain_valid())
 
 #print edited block4
 #print(short(block4.cal_hash()))
