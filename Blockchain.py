@@ -1,11 +1,13 @@
 import hashlib
 
 class Block:
-    def __init__(self, index, data):
+    def __init__(self, index, data,prev_hash):
         self.index=index
         self.data=data
         self.hash=""
-
+        #storing previous hash
+        self.prev_hash= prev_hash
+        
 #calculate the hash
     def cal_hash(self):
         content=f"{self.index}|{self.data}"
@@ -18,15 +20,15 @@ def short(long_hash):
 #the genesis block(1st block)
 class Blockchain:
     def __init__(self):
-        genesis = Block(index=0, data="Genesis Block")
+        genesis = Block(index=0, data="Genesis Block",prev_hash="0"*64)
+        self.chain=[genesis]
         #hashing on genesis block
         genesis.hash=genesis.cal_hash()
-        self.chain=[genesis]
 
 
     def add_block(self, data):
         last_block=self.get_last_block()
-        block=Block(last_block.index+1, data)
+        block=Block(last_block.index+1, data, last_block.hash)
         #cal hash when adding a block
         block.hash=block.cal_hash()
 
@@ -37,7 +39,7 @@ class Blockchain:
 
     def print_chain(self):
         for block in self.chain:
-            print(f"#{block.index} \n data={block.data} \n hash={short(block.hash)}")
+            print(f"#{block.index} \n data={block.data} \n prev={short(block.prev_hash)} \n hash={short(block.hash)}")
 
 #check if its edited or not
     def is_chain_valid(self):
@@ -58,15 +60,16 @@ Kvera.add_block("Kush pays Sathoshi 5")
 Kvera.add_block("Satoshi pays kush 5")
 
 #edit
-block4=Kvera.chain[4]
-block4.data="Satoshi pays Kush 50"
+#block4=Kvera.chain[4]
+#block4.data="Satoshi pays Kush 50"
+#block4.hash=block4.cal_hash()
 
 #print
-#Kvera.print_chain()
+Kvera.print_chain()
 
 #validate is it true
-print("is chain valid: ",Kvera.is_chain_valid())
+#print("is chain valid: ",Kvera.is_chain_valid())
 
-#
+#print edited block4
 #print(short(block4.cal_hash()))
 
