@@ -1,4 +1,4 @@
-# Blocks
+# Kvera Blocks
 
 A simple blockchain implementation in Python demonstrating core blockchain concepts including block creation, cryptographic hashing, chain validation, and tamper detection.
 
